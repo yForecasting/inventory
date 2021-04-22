@@ -5,6 +5,7 @@
 #' Carlo setup for robust forecast evaluation.
 #'
 #' @author  Yves R. Sagaert \email{yves.r.sagaert@gmail.com}
+#' @author Sarah Van der Auweraer
 #' @docType package
 #' @name inventory
 "_PACKAGE"

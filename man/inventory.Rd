@@ -38,7 +38,11 @@ service level.
 \author{
 Yves R. Sagaert
 
+Sarah Van der Auweraer
+
 import forecast
 
 Yves R. Sagaert \email{yves.r.sagaert@gmail.com}
+
+Sarah Van der Auweraer
 }

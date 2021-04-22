@@ -12,6 +12,7 @@
 #' @param ipolicy The inventory policy. "MTS" (Make to Stock) by default
 #'
 #' @author Yves R. Sagaert
+#' @author Sarah Van der Auweraer
 #'
 #' import forecast
 #'

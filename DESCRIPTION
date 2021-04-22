@@ -7,6 +7,10 @@ Authors@R:
            role = c("aut", "cre"),
            email = "yves.r.sagaert@gmail.com",
            )
+        person(given = "Sarah",
+           family = "Van der Auweraer",
+           role = c("aut"),
+           )
 Description: This pacakage provides forecast evaluation through
     inventory simulation via a Monte Carlo setup.
 License: GPL (>= 3)
