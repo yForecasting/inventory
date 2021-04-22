@@ -26,3 +26,7 @@ and after that run:
 6) Sync by Pull then Push
 
 All done !
+
+## For contributers, how to add a dependency package:
+1) in console: use_package("...")
+2) in fun.R file header: @import ...
