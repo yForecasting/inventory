@@ -1,16 +1,14 @@
 Package: inventory
 Title: Inventory Simulation for Forecast Evaluation
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
-    person(given = "Yves R.",
+    c(person(given = "Yves R.",
            family = "Sagaert",
            role = c("aut", "cre"),
-           email = "yves.r.sagaert@gmail.com",
-           )
-        person(given = "Sarah",
+           email = "yves.r.sagaert@gmail.com"),
+    person(given = "Sarah",
            family = "Van der Auweraer",
-           role = c("aut"),
-           )
+           role = c("aut")))
 Description: This pacakage provides forecast evaluation through
     inventory simulation via a Monte Carlo setup.
 License: GPL (>= 3)
@@ -18,3 +16,6 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Imports: 
+    forecast,
+    Mcomp
