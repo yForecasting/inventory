@@ -9,7 +9,7 @@
 inventory(forecast, h, ipolicy = "MTS")
 }
 \arguments{
-\item{forecast}{A data frame or matrix which represents the forecast
+\item{forecast}{A forecast object, data frame or matrix which represents the forecast
 distribution}
 
 \item{h}{The forecast horizon}
@@ -31,16 +31,16 @@ given inventory policy to evaluate the average on-hand inventory and the
 service level.
 }
 \examples{
-\dontrun{
-   inventory(forecastdata, h=12, ipolicy="MTS")
-}
+
+   ets.model <- forecast::ets(Mcomp::M3[[2000]]$x)
+   ets.forecast <- forecast::forecast(ets.model,Mcomp::M3[[2000]]$h)
+   inventory(forecast=ets.forecast, h=12, ipolicy="MTS")
+
 }
 \author{
 Yves R. Sagaert
 
 Sarah Van der Auweraer
-
-import forecast
 
 Yves R. Sagaert \email{yves.r.sagaert@gmail.com}
 
