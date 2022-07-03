@@ -1,0 +1,15 @@
+Package: inventory
+Title: Inventory evaluation
+Version: 0.0.1
+Authors@R: 
+    person("Yves R.", "Sagaert", , "yves.r.sagaert@gmail.com", role = c("aut", "cre"))
+Description: This package performs inventory simulation and evaluation of given
+    demand history. Decisions can either be taken on forecasts or via inventory
+    policies directly. 
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Imports: 
+    graphics,
+    stats
