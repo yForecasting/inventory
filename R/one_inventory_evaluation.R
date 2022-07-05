@@ -73,8 +73,7 @@ one_inventory_evaluation <- function(demand_forecast,
   # alpha <- 0.05 # service level parameter: desired stockout probability
   SL_fill_rate <- 0 # fill rate: how much items % are delivered from the orders
 
-  P_standoff <- 0 # production standoff
-  P_vector <- none # produced quantity over time
+  O_vector <- none # order quantity over time
 
   # mode = deterministic / normal distribution / distribution
   # plan for stochastic simulation and service levels
@@ -85,18 +84,25 @@ one_inventory_evaluation <- function(demand_forecast,
   # simulation loop one-step ahead, rolling window evaluation
   i <- 1 #Debug
   for (i in 1:length(demand_test)){
+    # Assumption: normal distributed forecast distribution
+    # Assumption: base stock level (no reorder point)
+    # Backorders cleared via I_vector: backorders are taken into account
+
     # Take into account the uncertainty of the forecast via sd vector
-    to_produce <- stats::qnorm(p=1-alpha, mean=demand_forecast[i],
+    to_order <- stats::qnorm(p=1-alpha, mean=demand_forecast[i],
                         sd=demand_forecast_sd[i]) - I_vector[i]
 
     # Update the planned production in this period
-    P_vector[i] <- max(0,to_produce,na.rm=TRUE)
+    # Assumption: don't throw away inventory and no negative orders
+    O_vector[i] <- max(0,to_order,na.rm=TRUE)
 
     # 2. Inventory
     # Update the inventory position
-    I_vector[i+1] <- I_vector[i] + P_vector[i] - demand_test[i]
-    D_fromstock[i] <- max(0,min(demand_test[i],(I_vector[i] + P_vector[i])))
-    I_onhand[i+1] <- max(0,I_vector[i+1],na.rm=TRUE)
+    # I_vector = inventory position, backlog, in pipeline
+    I_vector[i+1] <- I_vector[i] + O_vector[i] - demand_test[i]
+    delivery_time <- 0
+    D_fromstock[i] <- max(0,min(demand_test[i],(I_onhand[i] + O_vector[i-delivery_time])))
+    I_onhand[i+1] <- max(0,I_onhand[i] + O_vector[i-delivery_time] - demand_test[i],na.rm=TRUE)
   }
     # Metric for accumulated forecast error
 
@@ -107,12 +113,15 @@ one_inventory_evaluation <- function(demand_forecast,
     # forecast is a vector: mode deterministic/normal
     scaled_accumulated_bias[i] <- (sum(demand_forecast[1:i]) -
                                      sum(demand_test[1:i]))/mean(demand_test)
+    # Test: SAB should be related to nr of stockouts
 
     # 4. Test stockout update
     SL_stockout <- as.numeric(!(demand_test==D_fromstock))
-    SL_stockout_ratio <- mean(SL_stockout) # cycle service level =
-    #probability out of stock
+    SL_stockout_ratio <- mean(SL_stockout)
+    # cycle service level = probability out of stock
 
+    # Average inventory position
+    # I_vector: oh+pipeline-backorders
     average_inventory <- mean(I_vector,na.rm=TRUE)
     average_onhand_inventory <- mean(I_onhand,na.rm=TRUE)
 
@@ -128,7 +137,7 @@ one_inventory_evaluation <- function(demand_forecast,
         show_hist_demand <- hist_demand[(length(hist_demand)-
                                            min(2*length(demand_test),
                                                length(hist_demand))):length(hist_demand)]
-        values = c(show_hist_demand,demand_test, demand_forecast, P_vector,
+        values = c(show_hist_demand,demand_test, demand_forecast, O_vector,
                    I_vector,
                    scaled_accumulated_bias) ####
         plot(c(show_hist_demand,NA*demand_test),
@@ -147,7 +156,7 @@ one_inventory_evaluation <- function(demand_forecast,
 
         #Plot the produced quantities
         for (i in 1:length(demand_test)){
-          graphics::lines(length(show_hist_demand)+i,P_vector[i],
+          graphics::lines(length(show_hist_demand)+i,O_vector[i],
                 type="h",col="orange",lwd=2)
           # graph is misleading when dealing with negative inventory (backorders)
           # as the production bar always starts from 0
@@ -175,6 +184,9 @@ one_inventory_evaluation <- function(demand_forecast,
              average_onhand_inventory,
              SL_fill_rate,mean(demand_test),
              average_onhand_inventory/mean(demand_test)))
+    # scaled_accumulated_bias
+    # more detail: SL_stockout, D_fromstock, demand_test + O_vector (logistics)
+    # export above in fun alfas: in array stacked
   }
 
 

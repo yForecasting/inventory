@@ -10,3 +10,13 @@
 # Flow of contribution: fork - code - document - check - pull request
 # Add dependency via devtools - usethis::use_package(“utils”)
 "_PACKAGE"
+
+# Check on installation:
+# if (!require("devtools")){install.packages("devtools")}
+# devtools::install_github("yForecasting/inventory", force=TRUE)
+# library(inventory)
+
+
+#CRAN
+# check - check_built - release
+# checklist via: use_release_issue
