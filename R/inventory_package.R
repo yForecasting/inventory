@@ -18,5 +18,5 @@
 
 
 #CRAN
-# check - check_built - release
+# check - check(args = c('--as-cran')) - check_built - release
 # checklist via: use_release_issue
