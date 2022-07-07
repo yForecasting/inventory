@@ -48,6 +48,8 @@ one_inventory_evaluation <- function(demand_forecast,
     demand_forecast <- forecast_model$mean
     demand_forecast_sd <- (forecast_model$upper[,1]-forecast_model$mean)/
       stats::qnorm(0.9)
+    # Explain: Lo80-Hi80 contains 80% of the points. So we have 10% quantile
+    # and 90% quantile. To calculate sigma, we use s=(u-m)/qnorm(0.9).
   } else if ("list" %in% class(demand_forecast)){
     # 2) a list of mean + sd (over the horizon)
     demand_list <- demand_forecast
@@ -70,6 +72,8 @@ one_inventory_evaluation <- function(demand_forecast,
   D_fromstock <- none # demand directly from stock (no backordering)
   scaled_accumulated_bias <- none
   SL_stockout <- none # service level parameter: stockout
+  SL_shortage_items <- none # service level parameter: shortage items in
+  # absolute value
   # alpha <- 0.05 # service level parameter: desired stockout probability
   SL_fill_rate <- 0 # fill rate: how much items % are delivered from the orders
 
@@ -116,6 +120,7 @@ one_inventory_evaluation <- function(demand_forecast,
     # Test: SAB should be related to nr of stockouts
 
     # 4. Test stockout update
+    SL_shortage_items <- demand_test-D_fromstock # should not be negative
     SL_stockout <- as.numeric(!(demand_test==D_fromstock))
     SL_stockout_ratio <- mean(SL_stockout)
     # cycle service level = probability out of stock
@@ -124,6 +129,7 @@ one_inventory_evaluation <- function(demand_forecast,
     # I_vector: oh+pipeline-backorders
     average_inventory <- mean(I_vector,na.rm=TRUE)
     average_onhand_inventory <- mean(I_onhand,na.rm=TRUE)
+    average_shortage_items <- mean(SL_shortage_items,na.rm=TRUE)
 
     SL_fill_rate <- sum(D_fromstock)/sum(demand_test)
 
@@ -178,12 +184,17 @@ one_inventory_evaluation <- function(demand_forecast,
 
     }
 
+    # anything you add here in the return should be added to the matrix line 77
+    # in the function alphas_inventory_evaluation.
     return(c(alpha,
              SL_stockout_ratio,
              average_inventory,
              average_onhand_inventory,
              SL_fill_rate,mean(demand_test),
-             average_onhand_inventory/mean(demand_test)))
+             average_onhand_inventory/mean(demand_test),
+             average_shortage_items,
+             average_shortage_items/mean(demand_test)))
+
     # scaled_accumulated_bias
     # more detail: SL_stockout, D_fromstock, demand_test + O_vector (logistics)
     # export above in fun alfas: in array stacked

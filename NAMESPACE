@@ -2,4 +2,6 @@
 
 export(alphas_inventory_evaluation)
 export(inventory)
+export(multiple_series_inventory_evaluation)
 export(one_inventory_evaluation)
+export(rolling_origin_inventory)

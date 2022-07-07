@@ -1,11 +1,12 @@
-#' Inventory
+#' Inventory Evaluation for multiple series
 #'
-#' Evaluates multi-step ahead model forecast distributions
-#' via inventory simulations.
+#' Evaluates a rolling forecast via inventory evaluation for multiple series.
 #'
-#' This function returns the output of a sequence of inventory simulations
-#' with different target alphas. This output can be used to generate a trade-off
-#' curve between fill rate and average on-hand inventory.
+#' This function evaluates rolling forecasts for multiple series for a sequence
+#' of alphas via an inventory simulation. The output can be used to generate
+#' a trade-off curve between fill rate and average on-hand inventory for one
+#' specific series or averaged over all series.
+#'
 #'
 #' @param model_forecasts A list of different model forecasts. An individual
 #' model forecast can be either a forecast object, a list consisting
@@ -50,7 +51,7 @@
 #' inventory(model_forecasts=list(modelfc1, modelfc2),
 #' demand_test=test_series, hist_demand=series, plot.out=FALSE)
 #'
-inventory <- function(model_forecasts,
+multiple_series_inventory_evaluation <- function(model_forecasts,
                       demand_test, alpha=0.05, plot.out=FALSE,
                       mode="normal", hist_demand=NA,
                       alpha.seq=TRUE){
@@ -78,12 +79,12 @@ inventory <- function(model_forecasts,
     for (m in 1:length(model_forecasts)){
       # Do for every individual model, one inventory simulation for every alpha
       model_res <- alphas_inventory_evaluation(demand_forecast = model_forecasts[[m]],
-                                         demand_test = demand_test,
-                                         alpha = alpha,
-                                         plot.out = plot.out,
-                                         mode = mode,
-                                         hist_demand = hist_demand,
-                                         alpha.seq=TRUE)
+                                               demand_test = demand_test,
+                                               alpha = alpha,
+                                               plot.out = plot.out,
+                                               mode = mode,
+                                               hist_demand = hist_demand,
+                                               alpha.seq=TRUE)
       # Handle the table with summarised results
       if (m==1){
         # make

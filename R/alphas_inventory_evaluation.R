@@ -75,11 +75,13 @@ alphas_inventory_evaluation <- function(demand_forecast,
                             0.001*decrease_ten)
       }
       # matrix for returning result summary
-      inventory_result <- matrix(NA,nrow=length(alpha_sequence),ncol=7)
+      inventory_result <- matrix(NA,nrow=length(alpha_sequence),ncol=9)
       colnames(inventory_result) <- c("alpha","stockout_ratio", "av_inventory",
                                       "av_onhand_inventory", "fill_rate",
                                       "av_test_demand",
-                                      "scaled_av_onhand_inventory")
+                                      "scaled_av_onhand_inventory",
+                                      "av_shortage_items",
+                                      "scaled_av_shortage_items")
 
       a=1 # Debug
       for (a in 1:length(alpha_sequence)){
