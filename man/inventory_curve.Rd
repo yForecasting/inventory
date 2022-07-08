@@ -16,7 +16,8 @@ inventory_curve(
   line_width = rep(1, length(modelnames)),
   line_pch = c(0, 1, 2, 5, 6, 4, 3),
   line_colors = c("#7FC97F", "#BEAED4", "#FDC086", "#FFFF99", "#386CB0", "#F0027F",
-    "#BF5B17")
+    "#BF5B17"),
+  inverse = NA
 )
 }
 \arguments{
@@ -51,10 +52,12 @@ Default vector provided.}
 
 \item{line_colors}{A vector with colors used for the lines in the plot.
 Default vector provided.}
+
+\item{inverse}{Toggle with TRUE/FALSE to inverse the y-axis.}
 }
 \value{
 A plot with the trade-off curves between service level (fill rate)
-and inventory (average onhand inventory).
+and inventory (average on-hand inventory).
 }
 \description{
 Plot a trade-off curve between fill rate and average on-hand inventory.

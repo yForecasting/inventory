@@ -38,11 +38,12 @@
 #' @param  line_colors A vector with colors used for the lines in the plot.
 #' Default vector provided.
 #'
+#' @param inverse Toggle with TRUE/FALSE to inverse the y-axis.
 #'
 #' @author  Yves R. Sagaert
 #'
 #' @return A plot with the trade-off curves between service level (fill rate)
-#' and inventory (average onhand inventory).
+#' and inventory (average on-hand inventory).
 #'
 #' @export
 #'
@@ -72,11 +73,12 @@ inventory_curve <- function(models_inv, modelnames,
                                 line_pch=c(0,1,2,5,6,4,3),
                                 line_colors=c("#7FC97F", "#BEAED4", "#FDC086",
                                               "#FFFF99", "#386CB0", "#F0027F",
-                                              "#BF5B17")){
+                                              "#BF5B17"),
+                                inverse=NA){
   # joint format data -- preformat first
   if ("matrix" %in% class(models_inv)){
     # determine colnames
-    if ("m" %in% colnames(models_inv)){
+    if (!("m" %in% colnames(models_inv))){
       # There is no model column in the data; so only 1 model
       models_inv = list(models_inv)
       # rest is captured in the data ok section below
@@ -118,6 +120,30 @@ inventory_curve <- function(models_inv, modelnames,
   models_fr <- lapply(models_inv, colname=coly,
                       FUN=lambda <- function(df, colname){return(df[,colname])})
 
+  # y-axis inverted or not
+
+  if (is.na(inverse)){
+    if (coly=="fill_rate"){
+      inversed <- TRUE
+    } else {
+      inversed <- FALSE
+    }
+  } else {
+    # user input
+    inversed <- inverse
+  }
+
+  if (inversed==TRUE){
+    # e.g. 1-fill rate
+    ylim <- c(min(1-unlist(models_fr),na.rm=TRUE),
+            max(1-unlist(models_fr),na.rm=TRUE))
+  } else {
+    # e.g. shortage items
+    ylim <- c(min(unlist(models_fr),na.rm=TRUE),
+              max(unlist(models_fr),na.rm=TRUE))
+  }
+
+  # Plot area
   if (zoom==TRUE){
     # intelligent zoom
     xlim <- c(min(unlist(models_av_oh_inv),na.rm=TRUE),
@@ -128,18 +154,19 @@ inventory_curve <- function(models_inv, modelnames,
               max(unlist(models_av_oh_inv),na.rm=TRUE))
   }
 
-  ylim <- c(min(1-unlist(models_fr),na.rm=TRUE),
-            max(1-unlist(models_fr),na.rm=TRUE))
-
-
   plot(xlim,ylim,type="n",xlab=xlab, ylab=ylab,
        xlim=xlim,ylim=ylim,xaxs="i",yaxs="i")
 
   m=1 #debug
   for (m in 1:length(models_av_oh_inv)){
-    graphics::lines(models_av_oh_inv[[m]],1-models_fr[[m]],col=line_colors[m],
+    if (inversed==TRUE){
+      ydata <- 1-models_fr[[m]]
+    } else {
+      ydata <- models_fr[[m]]
+    }
+    graphics::lines(models_av_oh_inv[[m]],ydata,col=line_colors[m],
           type="l",pch=line_pch[m],cex=0.5,lty=line_type[m],lwd=line_width[m])
-    graphics::lines(models_av_oh_inv[[m]],1-models_fr[[m]],col=line_colors[m],
+    graphics::lines(models_av_oh_inv[[m]],ydata,col=line_colors[m],
           type="p",pch=line_pch[m],cex=0.5,lty=line_type[m],lwd=line_width[m])
   }
   graphics::legend("topright",legend=modelnames,lty=line_type,lwd=line_width, pch=line_pch,
