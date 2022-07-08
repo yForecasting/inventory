@@ -8,7 +8,7 @@
 #' forecasts can be plot, but are then evaluated on their inventory performance
 #' via an inventory simulation.
 #'
-#' @param data Example dataset that will be used to perform rolling origin
+#' @param dataset Example dataset that will be used to perform rolling origin
 #' experiment. Default set on "M3".
 #'
 #' @param models A vector with all the different model names. Default is set
@@ -31,10 +31,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' rolling_origin_inventory(data="M3", model=c("Naive","ETS"), plot.ro=TRUE)
+#' rolling_origin_inventory(dataset="M3", model=c("Naive","ETS"), plot.ro=TRUE)
 #' }
 #'
-rolling_origin_inventory <- function(data="M3", models=c("Naive","ETS"),
+rolling_origin_inventory <- function(dataset="M3", models=c("Naive","ETS"),
                                      plot.ro=TRUE){
 
   # test_competition_M3

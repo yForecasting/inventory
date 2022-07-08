@@ -5,13 +5,13 @@
 \title{Rolling Origin experiment with Inventory Evaluation}
 \usage{
 rolling_origin_inventory(
-  data = "M3",
+  dataset = "M3",
   models = c("Naive", "ETS"),
   plot.ro = TRUE
 )
 }
 \arguments{
-\item{data}{Example dataset that will be used to perform rolling origin
+\item{dataset}{Example dataset that will be used to perform rolling origin
 experiment. Default set on "M3".}
 
 \item{models}{A vector with all the different model names. Default is set
@@ -40,7 +40,7 @@ via an inventory simulation.
 }
 \examples{
 \dontrun{
-rolling_origin_inventory(data="M3", model=c("Naive","ETS"), plot.ro=TRUE)
+rolling_origin_inventory(dataset="M3", model=c("Naive","ETS"), plot.ro=TRUE)
 }
 
 }
