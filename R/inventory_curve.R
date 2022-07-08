@@ -1,9 +1,10 @@
-#' Alpha Sequence Inventory Plot
+#' Inventory Curve Plot
 #'
-#' Plot a trade-off curve beteen fill rate and average on-hand inventory.
+#' Plot a trade-off curve between fill rate and average on-hand inventory.
 #'
-#' The plot shown visualised a curve for every model where the 1-fill rate is
-#' shown on the y-axis and the average on-hand inventory is shown at the x-axis.
+#' The plot shown visualised a curve for every model via a sequence of alphas
+#' where the 1-fill rate is shown on the y-axis and the average on-hand
+#' inventory is shown at the x-axis.
 #'
 #' @param models_inv A list of matrices with the results from inventory
 #' evaluation.
@@ -11,9 +12,13 @@
 #' @param modelnames A vector with the names of the model for the legend of
 #' the plot.
 #'
-#' @param colx Data used on the x-axis. Default set on "av_onhand_inventory".
+#' @param colx Data used on the x-axis. Default set on
+#' "scaled_av_onhand_inventory". This can also be set on "av_onhand_inventory"
+#'  or "av_inventory".
 #'
-#' @param coly Data used on the y-axis. Default set on "fill_rate".
+#' @param coly Data used on the y-axis. Default set on "fill_rate", which will
+#' then show 1-Fill Rate. Other options are "av_shortage_items" and
+#' "scaled_av_shortage_items".
 #'
 #' @param xlab Label used on the x-axis. Default set on "Average on hand
 #' inventory".
@@ -51,11 +56,13 @@
 #' demand_test=test_series, hist_demand=series, plot.out=TRUE)
 #' ri2 <- alphas_inventory_evaluation(demand_forecast=list(forecast-5,sd=rnorm(12,6,2)),
 #' demand_test=test_series, hist_demand=series, plot.out=TRUE)
-#' alpha_sequence_inventory_plot(list(ri1,ri2),c("Trial model1","Trial model2"),zoom=FALSE)
+#' inventory_curve(models_inv=list(ri1,ri2),
+#' modelnames=c("Trial model1","Trial model2"),zoom=FALSE)
 #' }
+# previously called fun alpha_sequence_inventory_plot
 
-alpha_sequence_inventory_plot <- function(models_inv, modelnames,
-                                colx="av_onhand_inventory",
+inventory_curve <- function(models_inv, modelnames,
+                                colx="scaled_av_onhand_inventory",
                                 coly="fill_rate",
                                 xlab="Average on hand inventory",
                                 ylab="1 - Fill Rate",
@@ -66,6 +73,44 @@ alpha_sequence_inventory_plot <- function(models_inv, modelnames,
                                 line_colors=c("#7FC97F", "#BEAED4", "#FDC086",
                                               "#FFFF99", "#386CB0", "#F0027F",
                                               "#BF5B17")){
+  # joint format data -- preformat first
+  if ("matrix" %in% class(models_inv)){
+    # determine colnames
+    if ("m" %in% colnames(models_inv)){
+      # There is no model column in the data; so only 1 model
+      models_inv = list(models_inv)
+      # rest is captured in the data ok section below
+    } else {
+      # For all models in the matrix
+      models_mat <- data.frame(models_inv)
+      models <- unique(models_mat[,"m"])
+      m=1 # Debug
+      for (m in 1:length(models)){
+        model_nr <- models[m]
+        model_data <- sqldf::sqldf(paste0("SELECT alpha,
+                        AVG(",coly,") AS ",coly,",
+                        AVG(",colx,") AS ",colx,"
+                        FROM models_mat
+                        WHERE m = ",model_nr,"
+                        GROUP BY alpha ORDER BY alpha DESC"))
+        # egdat <- sqldf::sqldf("SELECT alpha,
+        #           AVG(fill_rate) AS fill_rate,
+        #           AVG(scaled_av_onhand_inventory) AS scaled_av_onhand_inventory
+        #           FROM models_mat
+        #           GROUP BY alpha ORDER BY alpha DESC")
+        # Save results in list
+        if (m==1){
+          models_inv <- list(model_data)
+        } else
+          # models_inv <- list(models_inv,model_data)
+          models_inv <- append(models_inv,NA)
+          models_inv[[m]] <- model_data
+
+      }
+    }
+  }
+  # format data ok:
+  if (class(models_inv) == "list"){
   # plot average onhand inventory (y) versus fill rate (x)
   # get the data
   models_av_oh_inv<- lapply(models_inv, colname=colx,
@@ -99,4 +144,7 @@ alpha_sequence_inventory_plot <- function(models_inv, modelnames,
   }
   graphics::legend("topright",legend=modelnames,lty=line_type,lwd=line_width, pch=line_pch,
          col=line_colors)
+  } else {
+    warning("The input format is not correct.")
+  }
 }
