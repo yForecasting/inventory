@@ -15,8 +15,10 @@
 #' to c("Naive", "ETS").
 #'
 #' @param plot.ro Parameter to plot a forecast plot of every model with the
-#' rolling origin forecast and prediction intervals.
+#' rolling origin forecast and prediction intervals. Default is FALSE.
 #'
+#' @param plot.curve Parameter to plot an inventory curve for every model,
+#' averaged over all series. Default is TRUE.
 #'
 #' @author  Yves R. Sagaert
 #'
@@ -31,11 +33,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' rolling_origin_inventory(dataset="M3", model=c("Naive","ETS"), plot.ro=TRUE)
+#' rolling_origin_inventory(dataset="M3", model=c("Naive","ETS"))
 #' }
 #'
 rolling_origin_inventory <- function(dataset="M3", models=c("Naive","ETS"),
-                                     plot.ro=TRUE){
+                                     plot.ro=FALSE, plot.curve=TRUE){
 
   # test_competition_M3
 
@@ -104,9 +106,38 @@ rolling_origin_inventory <- function(dataset="M3", models=c("Naive","ETS"),
       inventory_result <- cbind(s,inventory_res)
     } else {
       # append
-      inventory_result <- rbind(inventory_res,cbind(s,inventory_res))
+      inventory_result <- rbind(inventory_result,cbind(s,inventory_res))
     }
+  } # s end loop
+  if (plot.curve==TRUE){
+    # Scenario 1
+    inventory_curve(models_inv=inventory_result,
+                    modelnames = models, zoom=FALSE)
+    # Scenario 2
+    inventory_curve(models_inv=inventory_result,
+                    modelnames = models,
+                    colx="scaled_av_onhand_inventory",
+                    coly="scaled_av_shortage_items",
+                    xlab="Scaled Average on hand inventory",
+                    ylab="Scaled Average Shortage Items",
+                    zoom=FALSE)
+    similarity_sc1_sc2 <- sum(inventory_result[,"fill_rate"]==1-
+                                inventory_result[,"scaled_av_shortage_items"])/
+                                length(inventory_result[,1])
+    # Scenario 3
+    inventory_curve(models_inv=inventory_result,
+                    modelnames = models,
+                    colx="av_onhand_inventory",
+                    coly="av_shortage_items",
+                    xlab="Average on hand inventory",
+                    ylab="Average Shortage Items",
+                    zoom=FALSE)
   }
+  # calculate SID
+  sid <- scaled_inventory_distance(inventory_result)
+  colnames(sid) <- models
+  print(sid)
+  # write(inventory_result, "inventory_result_run10.Rdata")
 return(inventory_result)
 }
 

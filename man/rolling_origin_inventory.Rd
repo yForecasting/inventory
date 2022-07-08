@@ -7,7 +7,8 @@
 rolling_origin_inventory(
   dataset = "M3",
   models = c("Naive", "ETS"),
-  plot.ro = TRUE
+  plot.ro = FALSE,
+  plot.curve = TRUE
 )
 }
 \arguments{
@@ -18,7 +19,10 @@ experiment. Default set on "M3".}
 to c("Naive", "ETS").}
 
 \item{plot.ro}{Parameter to plot a forecast plot of every model with the
-rolling origin forecast and prediction intervals.}
+rolling origin forecast and prediction intervals. Default is FALSE.}
+
+\item{plot.curve}{Parameter to plot an inventory curve for every model,
+averaged over all series. Default is TRUE.}
 }
 \value{
 A matrix with the inventory evaluation results for all series, for
@@ -40,7 +44,7 @@ via an inventory simulation.
 }
 \examples{
 \dontrun{
-rolling_origin_inventory(dataset="M3", model=c("Naive","ETS"), plot.ro=TRUE)
+rolling_origin_inventory(dataset="M3", model=c("Naive","ETS"))
 }
 
 }
