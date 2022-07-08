@@ -39,12 +39,13 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' series <- rnorm(60,100,1)
 #' test_series <- rnorm(12,100,1)
 #' forecast <- series[(length(series)-12):length(series)]
 #' alphas_inventory_evaluation(demand_forecast=list(forecast,sd=rep(3,12)),
 #' demand_test=test_series, hist_demand=series, plot.out=TRUE)
-#'
+#' }
 alphas_inventory_evaluation <- function(demand_forecast,
                                    demand_test, alpha=0.05, plot.out=FALSE,
                                    mode="normal", hist_demand=NA,

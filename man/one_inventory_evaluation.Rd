@@ -46,12 +46,13 @@ This function returns the output of an inventory simulation based on the
 forecast input.
 }
 \examples{
+\dontrun{
 series <- rnorm(60,100,1)
 test_series <- rnorm(12,100,1)
 forecast <- series[(length(series)-12):length(series)]
 one_inventory_evaluation(demand_forecast=list(forecast,sd=rep(3,12)),
 demand_test=test_series, hist_demand=series, plot.out=TRUE)
-
+}
 }
 \author{
 Yves R. Sagaert

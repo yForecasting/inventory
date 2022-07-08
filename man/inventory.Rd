@@ -61,6 +61,7 @@ with different target alphas. This output can be used to generate a trade-off
 curve between fill rate and average on-hand inventory.
 }
 \examples{
+\dontrun{
 series <- rnorm(60,100,1)
 test_series <- rnorm(12,100,5)
 forecast1 <- series[(length(series)-12):length(series)]
@@ -69,7 +70,7 @@ modelfc1 <- list(forecast1,sd=rep(3,12))
 modelfc2 <- list(forecast2,sd=rep(1,12))
 inventory(model_forecasts=list(modelfc1, modelfc2),
 demand_test=test_series, hist_demand=series, plot.out=FALSE)
-
+}
 }
 \author{
 Yves R. Sagaert

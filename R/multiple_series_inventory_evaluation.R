@@ -42,6 +42,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' series <- rnorm(60,100,1)
 #' test_series <- rnorm(12,100,5)
 #' forecast1 <- series[(length(series)-12):length(series)]
@@ -50,6 +51,7 @@
 #' modelfc2 <- list(forecast2,sd=rep(1,12))
 #' inventory(model_forecasts=list(modelfc1, modelfc2),
 #' demand_test=test_series, hist_demand=series, plot.out=FALSE)
+#' }
 #'
 multiple_series_inventory_evaluation <- function(model_forecasts,
                       demand_test, alpha=0.05, plot.out=FALSE,

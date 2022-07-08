@@ -18,6 +18,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' example_inventory_result=data.frame(m=c(1,1,1,2,2,2),
 #' av_onhand_inventory=c(10,11,12,20,25,30),
 #' fill_rate=c(0.9,0.92,0.95,1,1,1),
@@ -28,7 +29,7 @@
 #' scaled_inventory_distance(inventory_result=example_inventory_result)
 #'
 #' scaled_inventory_distance(inventory_result=example_inventory_result, scaled=FALSE)
-#'
+#' }
 scaled_inventory_distance <- function(inventory_result, scaled = TRUE){
   if (scaled==TRUE){
     colname_inv <- "scaled_av_onhand_inventory"

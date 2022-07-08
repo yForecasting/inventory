@@ -24,6 +24,7 @@ SID is the minimum scaled inventory distance which makes the trade-off between
 fill-rate service level and average onhand inventory.
 }
 \examples{
+\dontrun{
 example_inventory_result=data.frame(m=c(1,1,1,2,2,2),
 av_onhand_inventory=c(10,11,12,20,25,30),
 fill_rate=c(0.9,0.92,0.95,1,1,1),
@@ -34,7 +35,7 @@ scaled_av_shortage_items=c(0.10, 0.08, 0.04, 0,0,0))
 scaled_inventory_distance(inventory_result=example_inventory_result)
 
 scaled_inventory_distance(inventory_result=example_inventory_result, scaled=FALSE)
-
+}
 }
 \author{
 Yves R. Sagaert
