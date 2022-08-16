@@ -134,10 +134,11 @@ rolling_origin_inventory <- function(dataset="M3", models=c("Naive","ETS"),
                     zoom=FALSE)
   }
   # calculate SID
-  sid <- scaled_inventory_distance(inventory_result)
+  sid <- scaled_inventory_distance(inventory_result,scaled=FALSE)
   colnames(sid) <- models
   print(sid)
-  # write(inventory_result, "inventory_result_run10.Rdata")
+  # save(inventory_result, "inventory_result_run10.Rdata")
+  # load("inventory_result_run10.Rdata")
 return(inventory_result)
 }
 
